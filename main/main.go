@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	yamlFileName := flag.String("yml", "sec.yml", "Specify a yaml file to use")
+	yamlFileName := flag.String("yml", "routes.yml", "Specify a yaml file to use")
 	mux := defaultMux()
 	flag.Parse()
 
