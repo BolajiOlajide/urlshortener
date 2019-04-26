@@ -1,7 +1,6 @@
 package urlshort
 
 import (
-	"fmt"
 	"net/http"
 
 	"gopkg.in/yaml.v2"
@@ -52,7 +51,6 @@ func YAMLHandler(yamlBytes []byte, fallback http.Handler) (http.HandlerFunc, err
 	for _, pu := range pathUrls {
 		pathsToUrls[pu.Path] = pu.URL
 	}
-	fmt.Println(pathsToUrls)
 
 	return MapHandler(pathsToUrls, fallback), nil
 }
