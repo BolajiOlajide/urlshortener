@@ -20,17 +20,15 @@ func main() {
 	// Build the YAMLHandler using the mapHandler as the
 	// fallback
 	yaml := `
-	- path: /urlshort
-	  url: https://github.com/BolajiOlajide/urlshort
-	- path: /google
-	  url: https://google.com
-	`
+- path: /urlshort
+  url: https://github.com/BolajiOlajide/urlshort
+- path: /google
+  url: https://google.com
+`
 	yamlHandler, err := urlshort.YAMLHandler([]byte(yaml), mapHandler)
 	if err != nil {
-		fmt.Print("inside here")
 		panic(err)
 	}
-	fmt.Print("inside here", yamlHandler, "\n")
 	fmt.Println("Starting the server on :8080")
 	http.ListenAndServe(":8080", yamlHandler)
 }
