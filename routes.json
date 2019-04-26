@@ -1,10 +1,10 @@
 [
   {
-    "path": "goog",
+    "path": "/goog",
     "url": "http://google.com"
   },
   {
-    "path": "twi",
+    "path": "/twi",
     "url": "http://twitter.com"
   }
 ]
