@@ -11,6 +11,7 @@ import (
 
 func main() {
 	yamlFileName := flag.String("yml", "routes.yml", "Specify a yaml file to use")
+	jsonFileName := flag.String("json", "routes.json", "specify JSON to load route from")
 	mux := defaultMux()
 	flag.Parse()
 
@@ -28,7 +29,19 @@ func main() {
 		fmt.Println(err)
 		panic(err)
 	}
+
+	// Build the YAMLHandler using the mapHandler as the
+	// fallback
+	json, err := ioutil.ReadFile(*jsonFileName)
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
 	yamlHandler, err := urlshort.YAMLHandler([]byte(yaml), mapHandler)
+	if err != nil {
+		panic(err)
+	}
+	jsonHandler, err := urlshort.JSONHandler([]byte(json), mapHandler)
 	if err != nil {
 		panic(err)
 	}
