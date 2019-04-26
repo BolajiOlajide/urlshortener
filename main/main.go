@@ -1,14 +1,18 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 
 	urlshort "github.com/BolajiOlajide/urlshortener"
 )
 
 func main() {
+	yamlFileName := flag.String("yml", "sec.yml", "Specify a yaml file to use")
 	mux := defaultMux()
+	flag.Parse()
 
 	// Build the MapHandler using the mux as the fallback
 	pathsToUrls := map[string]string{
@@ -19,12 +23,11 @@ func main() {
 
 	// Build the YAMLHandler using the mapHandler as the
 	// fallback
-	yaml := `
-- path: /urlshort
-  url: https://github.com/BolajiOlajide/urlshort
-- path: /google
-  url: https://google.com
-`
+	yaml, err := ioutil.ReadFile(*yamlFileName)
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
 	yamlHandler, err := urlshort.YAMLHandler([]byte(yaml), mapHandler)
 	if err != nil {
 		panic(err)

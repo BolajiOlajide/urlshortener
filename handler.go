@@ -47,10 +47,7 @@ func YAMLHandler(yamlBytes []byte, fallback http.Handler) (http.HandlerFunc, err
 		return nil, err
 	}
 	// convert yaml array into a mpa
-	pathsToUrls := make(map[string]string)
-	for _, pu := range pathUrls {
-		pathsToUrls[pu.Path] = pu.URL
-	}
+	pathsToUrls := buildMap(pathUrls)
 
 	return MapHandler(pathsToUrls, fallback), nil
 }
@@ -62,6 +59,14 @@ func parseYaml(data []byte) ([]pathURL, error) {
 		return nil, err
 	}
 	return pathUrls, nil
+}
+
+func buildMap(pathUrls []pathURL) map[string]string {
+	pathsToUrls := make(map[string]string)
+	for _, pu := range pathUrls {
+		pathsToUrls[pu.Path] = pu.URL
+	}
+	return pathsToUrls
 }
 
 type pathURL struct {
