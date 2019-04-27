@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS urls (
 );
 
 INSERT INTO urls(path, url) VALUES
-    ('bhgisd', 'https://facebook.com'),
-    ('astaxie', 'https://astaxie.gitbooks.io/build-web-application-with-golang/en/05.2.html'),
-    ('svg', 'https://www.sarasoueidan.com/blog/svg-coordinate-systems/'),
-    ('turing', 'https://github.com/BolajiOlajide/turing-tshirt/tree/master/backend');
+    ('/bhgisd', 'https://facebook.com'),
+    ('/astaxie', 'https://astaxie.gitbooks.io/build-web-application-with-golang/en/05.2.html'),
+    ('/svg', 'https://www.sarasoueidan.com/blog/svg-coordinate-systems/'),
+    ('/turing', 'https://github.com/BolajiOlajide/turing-tshirt/tree/master/backend');
