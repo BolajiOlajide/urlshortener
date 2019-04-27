@@ -65,6 +65,24 @@ func JSONHandler(jsonBytes []byte, fallback http.Handler) (http.HandlerFunc, err
 	return MapHandler(pathsToUrls, fallback), nil
 }
 
+func DBHandler(dbPaths map[string]string, fallback http.Handler) (http.HandlerFunc, error) {
+	pathUrls := parseDBRows(dbPaths)
+
+	// convert db array into a map
+	pathsToUrls := buildMap(pathUrls)
+
+	return MapHandler(pathsToUrls, fallback), nil
+}
+
+func parseDBRows(data map[string]string) []pathURL {
+	var pathUrls []pathURL
+	for path, url := range data {
+		pathUrls = append(pathUrls, pathURL{path, url})
+	}
+
+	return pathUrls
+}
+
 func parseJSON(data []byte) ([]pathURL, error) {
 	var pathUrls []pathURL
 	err := json.Unmarshal(data, &pathUrls)

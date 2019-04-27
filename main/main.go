@@ -6,7 +6,10 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"database/sql"
+
 	urlshort "github.com/BolajiOlajide/urlshortener"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
@@ -14,6 +17,9 @@ func main() {
 	jsonFileName := flag.String("json", "routes.json", "specify JSON to load route from")
 	mux := defaultMux()
 	flag.Parse()
+
+	db, err := sql.Open("mysql", "bolaji:andela@/demodb")
+	checkErr(err)
 
 	// Build the MapHandler using the mux as the fallback
 	pathsToUrls := map[string]string{
@@ -25,27 +31,33 @@ func main() {
 	// Build the YAMLHandler using the mapHandler as the
 	// fallback
 	yaml, err := ioutil.ReadFile(*yamlFileName)
-	if err != nil {
-		fmt.Println(err)
-		panic(err)
-	}
+	checkErr(err)
 
 	// Build the YAMLHandler using the mapHandler as the
 	// fallback
 	json, err := ioutil.ReadFile(*jsonFileName)
-	if err != nil {
-		fmt.Println(err)
-		panic(err)
-	}
-	yamlHandler, err := urlshort.YAMLHandler([]byte(yaml), mapHandler)
-	if err != nil {
-		panic(err)
+	checkErr(err)
+
+	// query
+	rows, err := db.Query("SELECT * FROM urls")
+	checkErr(err)
+
+	dbPaths := make(map[string]string)
+	for rows.Next() {
+		var path, url string
+		var id int
+		err := rows.Scan(&id, &path, &url)
+		checkErr(err)
+		dbPaths[path] = url
 	}
 
+	// HANDLERS
+	yamlHandler, err := urlshort.YAMLHandler([]byte(yaml), mapHandler)
+	checkErr(err)
+
 	jsonHandler, err := urlshort.JSONHandler([]byte(json), yamlHandler)
-	if err != nil {
-		panic(err)
-	}
+	checkErr(err)
+
 	fmt.Println("Starting the server on :8080")
 	http.ListenAndServe(":8080", jsonHandler)
 }
@@ -58,4 +70,10 @@ func defaultMux() *http.ServeMux {
 
 func hello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Hello, world!")
+}
+
+func checkErr(err error) {
+	if err != nil {
+		panic(err)
+	}
 }
